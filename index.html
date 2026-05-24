@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSE F&amp;O · Participant-wise Open Interest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0d10;
+    --panel: #14161b;
+    --line: #23262e;
+    --ink: #e8e6df;
+    --muted: #8b8f99;
+    --accent: #f0a830;       /* amber */
+    --accent-dim: #6b4d18;
+    --pos: #4cb782;
+    --neg: #e0644f;
+    --total: #1b1d23;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Archivo', sans-serif;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(240,168,48,0.07), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: clamp(1rem, 3vw, 3rem);
+    /* faint grid texture */
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 100% 100%, 44px 44px, 44px 44px;
+    background-blend-mode: normal;
+  }
+
+  .wrap { max-width: 1280px; margin: 0 auto; }
+
+  /* ---- Header ---- */
+  header {
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--panel), #101116);
+    border-radius: 14px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute; inset: 0 auto 0 0; width: 4px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 1rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+  .meta .label { color: var(--muted); display: block; font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.25rem; }
+  .meta .value { color: var(--ink); font-weight: 500; }
+  .meta .value.big { color: var(--accent); font-size: 1.05rem; font-weight: 700; }
+  .meta a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--muted); }
+  .meta a:hover { color: var(--accent); }
+
+  /* ---- Table ---- */
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 980px; }
+
+  thead th {
+    position: sticky; top: 0;
+    background: #101116;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: right;
+    padding: 0.85rem 0.85rem;
+    border-bottom: 1px solid var(--line);
+    white-space: normal;
+    vertical-align: bottom;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  thead th:hover { color: var(--accent); }
+  thead th:first-child { text-align: left; }
+  thead th .arrow { color: var(--accent); font-size: 0.7rem; }
+
+  tbody td {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    text-align: right;
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid rgba(35,38,46,0.6);
+    color: var(--ink);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  tbody td:first-child {
+    text-align: left;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    color: var(--ink);
+    position: sticky; left: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+  }
+  tbody tr:hover td { background: #181a20; }
+  tbody tr:hover td:first-child { background: #181a20; }
+
+  /* highlight the TOTAL row */
+  tbody tr.total td { background: var(--total); color: var(--accent); font-weight: 700; border-top: 1px solid var(--accent-dim); }
+  tbody tr.total td:first-child { background: var(--total); color: var(--accent); }
+
+  /* staggered entrance */
+  tbody tr { opacity: 0; transform: translateY(6px); animation: rise 0.4s ease forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  footer {
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: 0.76rem;
+    line-height: 1.6;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  .error { padding: 2rem; color: var(--neg); font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">National Stock Exchange · Derivatives</div>
+    <h1>Participant-wise Open Interest</h1>
+    <div class="meta">
+      <div>
+        <span class="label">Report Date</span>
+        <span class="value big" id="report-date">—</span>
+      </div>
+      <div>
+        <span class="label">Last Fetched</span>
+        <span class="value" id="fetched-at">—</span>
+      </div>
+      <div>
+        <span class="label">Source</span>
+        <span class="value"><a id="source-link" href="#" target="_blank" rel="noopener">NSE archive ↗</a></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="panel">
+    <div class="scroll">
+      <table id="oi-table">
+        <thead><tr id="head-row"></tr></thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    Data is refreshed automatically each weekday evening (IST) by a scheduled GitHub Action that pulls
+    NSE's published report. Open interest figures are in number of contracts. Click any column header to sort.<br>
+    This is an unofficial mirror for personal use — always verify against the
+    <a href="https://www.nseindia.com/all-reports-derivatives" target="_blank" rel="noopener">official NSE reports page</a>.
+  </footer>
+</div>
+
+<script>
+const NUMERIC_RE = /^-?[\d,]+(\.\d+)?$/;
+
+function toNumber(v) {
+  if (typeof v !== "string") return NaN;
+  const cleaned = v.replace(/,/g, "");
+  return NUMERIC_RE.test(v.trim()) ? parseFloat(cleaned) : NaN;
+}
+
+function formatNum(v) {
+  const n = toNumber(v);
+  return isNaN(n) ? v : n.toLocaleString("en-IN");
+}
+
+let DATA = null;
+let sortState = { col: null, dir: 1 };
+
+function render() {
+  const headRow = document.getElementById("head-row");
+  const body = document.getElementById("body");
+  headRow.innerHTML = "";
+  body.innerHTML = "";
+
+  DATA.columns.forEach((col, idx) => {
+    const th = document.createElement("th");
+    const isSorted = sortState.col === col;
+    th.innerHTML = col + (isSorted ? ` <span class="arrow">${sortState.dir === 1 ? "▲" : "▼"}</span>` : "");
+    th.addEventListener("click", () => {
+      if (sortState.col === col) sortState.dir *= -1;
+      else { sortState.col = col; sortState.dir = 1; }
+      render();
+    });
+    headRow.appendChild(th);
+  });
+
+  let rows = [...DATA.rows];
+  if (sortState.col) {
+    const c = sortState.col;
+    rows.sort((a, b) => {
+      const na = toNumber(a[c]), nb = toNumber(b[c]);
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortState.dir;
+      return String(a[c]).localeCompare(String(b[c])) * sortState.dir;
+    });
+  }
+
+  rows.forEach((row, i) => {
+    const tr = document.createElement("tr");
+    if (String(row[DATA.columns[0]]).toUpperCase() === "TOTAL") tr.className = "total";
+    tr.style.animationDelay = (i * 0.05) + "s";
+    DATA.columns.forEach((col, idx) => {
+      const td = document.createElement("td");
+      td.textContent = idx === 0 ? row[col] : formatNum(row[col]);
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+}
+
+async function load() {
+  try {
+    // Cache-bust so GitHub Pages' CDN doesn't serve a stale copy.
+    const resp = await fetch("data.json?t=" + Date.now());
+    if (!resp.ok) throw new Error("Could not load data.json (" + resp.status + ")");
+    DATA = await resp.json();
+
+    document.getElementById("report-date").textContent = DATA.report_date_display || DATA.report_date || "—";
+    document.getElementById("fetched-at").textContent = DATA.fetched_at_ist || "—";
+    const link = document.getElementById("source-link");
+    if (DATA.source_url) link.href = DATA.source_url;
+
+    render();
+  } catch (e) {
+    document.querySelector(".panel").innerHTML =
+      '<div class="error">Failed to load data: ' + e.message + '</div>';
+  }
+}
+
+load();
+</script>
+</body>
+</html>

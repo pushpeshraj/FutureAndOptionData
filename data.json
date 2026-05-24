@@ -1,0 +1,31 @@
+{
+  "title": "Participant wise Open Interest (sample — will be replaced on first run)",
+  "report_date": "2026-05-22",
+  "report_date_display": "22 May 2026",
+  "fetched_at_ist": "22 May 2026, 06:32 PM IST",
+  "source_url": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_oi_22052026.csv",
+  "columns": [
+    "Client Type",
+    "Future Index Long",
+    "Future Index Short",
+    "Future Stock Long",
+    "Future Stock Short",
+    "Option Index Call Long",
+    "Option Index Put Long",
+    "Option Index Call Short",
+    "Option Index Put Short",
+    "Option Stock Call Long",
+    "Option Stock Put Long",
+    "Option Stock Call Short",
+    "Option Stock Put Short",
+    "Total Long Contracts",
+    "Total Short Contracts"
+  ],
+  "rows": [
+    {"Client Type": "Client", "Future Index Long": "152340", "Future Index Short": "168902", "Future Stock Long": "1894521", "Future Stock Short": "1320045", "Option Index Call Long": "2841233", "Option Index Put Long": "3102994", "Option Index Call Short": "2655410", "Option Index Put Short": "2988120", "Option Stock Call Long": "988231", "Option Stock Put Long": "742110", "Option Stock Call Short": "812330", "Option Stock Put Short": "690221", "Total Long Contracts": "16004412", "Total Short Contracts": "14988902"},
+    {"Client Type": "DII", "Future Index Long": "44210", "Future Index Short": "28110", "Future Stock Long": "302145", "Future Stock Short": "118330", "Option Index Call Long": "0", "Option Index Put Long": "0", "Option Index Call Short": "0", "Option Index Put Short": "0", "Option Stock Call Long": "0", "Option Stock Put Long": "0", "Option Stock Call Short": "0", "Option Stock Put Short": "0", "Total Long Contracts": "346355", "Total Short Contracts": "146440"},
+    {"Client Type": "FII", "Future Index Long": "98220", "Future Index Short": "76540", "Future Stock Long": "1102330", "Future Stock Short": "1455120", "Option Index Call Long": "812440", "Option Index Put Long": "655210", "Option Index Call Short": "744120", "Option Index Put Short": "701340", "Option Stock Call Long": "210330", "Option Stock Put Long": "188220", "Option Stock Call Short": "245110", "Option Stock Put Short": "201230", "Total Long Contracts": "3411790", "Total Short Contracts": "3879830"},
+    {"Client Type": "Pro", "Future Index Long": "61130", "Future Index Short": "82348", "Future Stock Long": "455210", "Future Stock Short": "860721", "Option Index Call Long": "1455320", "Option Index Put Long": "1366210", "Option Index Call Short": "1564873", "Option Index Put Short": "1430844", "Option Stock Call Long": "388210", "Option Stock Put Long": "311220", "Option Stock Call Short": "417631", "Option Stock Put Short": "350110", "Total Long Contracts": "5036630", "Total Short Contracts": "5573527"},
+    {"Client Type": "TOTAL", "Future Index Long": "355900", "Future Index Short": "355900", "Future Stock Long": "3754206", "Future Stock Short": "3754216", "Option Index Call Long": "5108993", "Option Index Put Long": "5124414", "Option Index Call Short": "4964403", "Option Index Put Short": "5120304", "Option Stock Call Long": "1587001", "Option Stock Put Long": "1241550", "Option Stock Call Short": "1475101", "Option Stock Put Short": "1241561", "Total Long Contracts": "24799187", "Total Short Contracts": "24588699"}
+  ]
+}
