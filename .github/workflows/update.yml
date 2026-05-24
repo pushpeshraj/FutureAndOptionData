@@ -1,12 +1,14 @@
 name: Update NSE Participant OI
 
-# Runs on a schedule (evenings IST, after NSE publishes) and can be triggered manually.
+# DYNAMIC-SCHEDULE VARIANT.
+# To use this instead of the two-fixed-times version, replace the contents of
+# .github/workflows/update.yml with this file (keep the same filename/location).
+# The job is triggered once on weekdays, then waits a RANDOM 0-120 minutes before
+# fetching, so the actual run time differs every day.
 on:
   schedule:
-    # NSE publishes ~6 PM IST. 13:00 & 15:00 UTC = ~6:30 PM & ~8:30 PM IST.
-    # Two attempts in case the report is published late. Weekdays only.
+    # Base trigger: 13:00 UTC (~6:30 PM IST), weekdays only — just after NSE publishes.
     - cron: "0 13 * * 1-5"
-    - cron: "0 15 * * 1-5"
   workflow_dispatch:  # lets you run it manually from the Actions tab
 
 # Allow the workflow to commit the refreshed data back to the repo.
@@ -27,6 +29,19 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Random delay (varies the run time each day)
+        # Skip the wait on manual runs so "Run workflow" is instant.
+        if: github.event_name == 'schedule'
+        shell: bash   # $RANDOM is a bash feature; pin the shell to be safe
+        run: |
+          # Sleep 0-120 minutes. Effective fetch time lands ~6:30 PM - ~8:30 PM IST,
+          # different every day. Lower MAX_DELAY to use fewer Action minutes.
+          MAX_DELAY=7200
+          DELAY=$(( RANDOM * 32768 + RANDOM ))
+          DELAY=$(( DELAY % (MAX_DELAY + 1) ))
+          echo "Waiting ${DELAY}s (~$(( DELAY / 60 )) min) before fetching..."
+          sleep "$DELAY"
 
       - name: Fetch latest report
         run: python fetch_data.py
