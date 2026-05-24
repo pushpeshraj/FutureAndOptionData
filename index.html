@@ -157,13 +157,40 @@
   footer a:hover { text-decoration: underline; }
 
   .error { padding: 2rem; color: var(--neg); font-family: 'JetBrains Mono', monospace; }
+
+  /* ---- Tabs ---- */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.6rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--ink); border-color: var(--accent-dim); }
+  .tab.active {
+    color: var(--bg);
+    background: var(--accent);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="eyebrow">National Stock Exchange · Derivatives</div>
-    <h1>Participant-wise Open Interest</h1>
+    <h1 id="page-title">Participant-wise Open Interest</h1>
     <div class="meta">
       <div>
         <span class="label">Report Date</span>
@@ -180,6 +207,11 @@
     </div>
   </header>
 
+  <div class="tabs">
+    <button class="tab active" data-key="participant">Participant-wise OI</button>
+    <button class="tab" data-key="fii">FII Derivative Statistics</button>
+  </div>
+
   <div class="panel">
     <div class="scroll">
       <table id="oi-table">
@@ -190,8 +222,9 @@
   </div>
 
   <footer>
-    Data is refreshed automatically each weekday evening (IST) by a scheduled GitHub Action that pulls
-    NSE's published report. Open interest figures are in number of contracts. Click any column header to sort.<br>
+    Both reports are refreshed automatically each weekday evening (IST) by a scheduled GitHub Action
+    that pulls NSE's published files. Participant OI is in number of contracts; FII amounts are in ₹ crore.
+    Click any column header to sort.<br>
     This is an unofficial mirror for personal use — always verify against the
     <a href="https://www.nseindia.com/all-reports-derivatives" target="_blank" rel="noopener">official NSE reports page</a>.
   </footer>
@@ -255,26 +288,60 @@ function render() {
   });
 }
 
+// Two reports, each with its own JSON file. Both are loaded up front so
+// switching tabs is instant.
+const DATASETS = {
+  participant: { url: "data.json",      title: "Participant-wise Open Interest", data: null, error: null },
+  fii:         { url: "fii_stats.json", title: "FII Derivative Statistics",      data: null, error: null },
+};
+let activeKey = "participant";
+
+function showError(msg) {
+  document.getElementById("head-row").innerHTML = "";
+  document.getElementById("body").innerHTML =
+    '<tr><td class="error">Failed to load: ' + msg + '</td></tr>';
+}
+
+function applyActive() {
+  const ds = DATASETS[activeKey];
+  if (!ds.data) { showError(ds.error || "No data available"); return; }
+  DATA = ds.data;
+  document.getElementById("page-title").textContent = ds.title;
+  document.getElementById("report-date").textContent = DATA.report_date_display || DATA.report_date || "—";
+  document.getElementById("fetched-at").textContent = DATA.fetched_at_ist || "—";
+  document.getElementById("source-link").href = DATA.source_url || "#";
+  sortState = { col: null, dir: 1 };   // reset sort — the two reports have different columns
+  render();
+}
+
+async function fetchJSON(url) {
+  // Cache-bust so GitHub Pages' CDN doesn't serve a stale copy.
+  const resp = await fetch(url + "?t=" + Date.now());
+  if (!resp.ok) throw new Error(url + " (" + resp.status + ")");
+  return resp.json();
+}
+
 async function load() {
-  try {
-    // Cache-bust so GitHub Pages' CDN doesn't serve a stale copy.
-    const resp = await fetch("data.json?t=" + Date.now());
-    if (!resp.ok) throw new Error("Could not load data.json (" + resp.status + ")");
-    DATA = await resp.json();
+  // Load both datasets in parallel; a failure on one doesn't break the other.
+  await Promise.all(Object.keys(DATASETS).map(async (k) => {
+    try { DATASETS[k].data = await fetchJSON(DATASETS[k].url); }
+    catch (e) { DATASETS[k].error = e.message; }
+  }));
 
-    document.getElementById("report-date").textContent = DATA.report_date_display || DATA.report_date || "—";
-    document.getElementById("fetched-at").textContent = DATA.fetched_at_ist || "—";
-    const link = document.getElementById("source-link");
-    if (DATA.source_url) link.href = DATA.source_url;
+  document.querySelectorAll(".tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeKey = btn.dataset.key;
+      applyActive();
+    });
+  });
 
-    render();
-  } catch (e) {
-    document.querySelector(".panel").innerHTML =
-      '<div class="error">Failed to load data: ' + e.message + '</div>';
-  }
+  applyActive();
 }
 
 load();
+
 </script>
 </body>
 </html>

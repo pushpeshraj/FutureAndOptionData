@@ -1,0 +1,20 @@
+{
+  "title": "FII Derivative Statistics (sample — will be replaced on first run)",
+  "report_date": "2026-05-22",
+  "report_date_display": "22 May 2026",
+  "fetched_at_ist": "22 May 2026, 06:41 PM IST",
+  "source_url": "https://nsearchives.nseindia.com/content/fo/fii_stats_22-May-2026.xls",
+  "columns": [
+    "Category",
+    "Buy Contracts", "Buy Amount (Cr)",
+    "Sell Contracts", "Sell Amount (Cr)",
+    "OI Contracts", "OI Amount (Cr)"
+  ],
+  "rows": [
+    {"Category": "Index Futures", "Buy Contracts": "123456", "Buy Amount (Cr)": "9876.54", "Sell Contracts": "98765", "Sell Amount (Cr)": "7654.32", "OI Contracts": "211222", "OI Amount (Cr)": "16540.10"},
+    {"Category": "Index Options", "Buy Contracts": "4567890", "Buy Amount (Cr)": "321098.76", "Sell Contracts": "4455667", "Sell Amount (Cr)": "311222.33", "OI Contracts": "1234567", "OI Amount (Cr)": "88765.44"},
+    {"Category": "Stock Futures", "Buy Contracts": "555123", "Buy Amount (Cr)": "44321.00", "Sell Contracts": "566789", "Sell Amount (Cr)": "45012.20", "OI Contracts": "987654", "OI Amount (Cr)": "77654.10"},
+    {"Category": "Stock Options", "Buy Contracts": "321456", "Buy Amount (Cr)": "22110.55", "Sell Contracts": "311222", "Sell Amount (Cr)": "21876.40", "OI Contracts": "444333", "OI Amount (Cr)": "33221.10"},
+    {"Category": "Total", "Buy Contracts": "5421925", "Buy Amount (Cr)": "397206.85", "Sell Contracts": "5432443", "Sell Amount (Cr)": "385765.25", "OI Contracts": "2877776", "OI Amount (Cr)": "216180.74"}
+  ]
+}

@@ -5,11 +5,12 @@ report. A scheduled GitHub Action fetches the latest published file each weekday
 evening and commits it to the repo; GitHub Pages serves a webpage that displays it.
 
 ```
-fetch_data.py              → downloads the latest report, writes data.json + raw CSV
-index.html                 → the webpage (reads data.json)
-data.json                  → the data the page renders (refreshed by the Action)
+fetch_data.py              → downloads Participant-wise OI, writes data.json + raw CSV
+fetch_fii_stats.py         → downloads FII Derivative Statistics, writes fii_stats.json + raw .xls
+index.html                 → the webpage (two tabs: Participant OI and FII Stats)
+data.json / fii_stats.json → the data each tab renders (refreshed by the Action)
 requirements.txt           → Python dependency (requests)
-.github/workflows/update.yml → scheduled fetch + auto-commit
+.github/workflows/update.yml → scheduled fetch + auto-commit (both reports)
 ```
 
 ## One-time setup
