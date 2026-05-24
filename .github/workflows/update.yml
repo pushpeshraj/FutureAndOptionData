@@ -1,0 +1,44 @@
+name: Update NSE Participant OI
+
+# Runs on a schedule (evenings IST, after NSE publishes) and can be triggered manually.
+on:
+  schedule:
+    # NSE publishes ~6 PM IST. 13:00 & 15:00 UTC = ~6:30 PM & ~8:30 PM IST.
+    # Two attempts in case the report is published late. Weekdays only.
+    - cron: "0 13 * * 1-5"
+    - cron: "0 15 * * 1-5"
+  workflow_dispatch:  # lets you run it manually from the Actions tab
+
+# Allow the workflow to commit the refreshed data back to the repo.
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch latest report
+        run: python fetch_data.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json participant_oi_*.csv
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update participant OI data ($(date -u +%Y-%m-%d))"
+            git push
+          fi
