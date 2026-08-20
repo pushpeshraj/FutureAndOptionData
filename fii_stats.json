@@ -1,9 +1,9 @@
 {
   "title": "FII Derivative Statistics",
-  "report_date": "2026-08-19",
-  "report_date_display": "19 Aug 2026",
-  "fetched_at_ist": "19 Aug 2026, 08:10 PM IST",
-  "source_url": "https://nsearchives.nseindia.com/content/fo/fii_stats_19-Aug-2026.xls",
+  "report_date": "2026-08-20",
+  "report_date_display": "20 Aug 2026",
+  "fetched_at_ist": "20 Aug 2026, 08:04 PM IST",
+  "source_url": "https://nsearchives.nseindia.com/content/fo/fii_stats_20-Aug-2026.xls",
   "columns": [
     "Category",
     "Buy Contracts",
@@ -16,48 +16,48 @@
   "rows": [
     {
       "Category": "Index Futures",
-      "Buy Contracts": "8934",
-      "Buy Amount (Cr)": "1431.76",
-      "Sell Contracts": "24583",
-      "Sell Amount (Cr)": "3924.53",
-      "OI Contracts": "259547",
-      "OI Amount (Cr)": "42157.82"
+      "Buy Contracts": "44318",
+      "Buy Amount (Cr)": "7216.10",
+      "Sell Contracts": "46624",
+      "Sell Amount (Cr)": "7578.83",
+      "OI Contracts": "260783",
+      "OI Amount (Cr)": "42617.80"
     },
     {
       "Category": "Index Options",
-      "Buy Contracts": "3250569",
-      "Buy Amount (Cr)": "520636.04",
-      "Sell Contracts": "3371949",
-      "Sell Amount (Cr)": "539762.17",
-      "OI Contracts": "2897598",
-      "OI Amount (Cr)": "463055.45"
+      "Buy Contracts": "3764039",
+      "Buy Amount (Cr)": "601301.34",
+      "Sell Contracts": "3776954",
+      "Sell Amount (Cr)": "603761.50",
+      "OI Contracts": "3003791",
+      "OI Amount (Cr)": "482455.50"
     },
     {
       "Category": "Stock Futures",
-      "Buy Contracts": "411499",
-      "Buy Amount (Cr)": "26817.41",
-      "Sell Contracts": "399725",
-      "Sell Amount (Cr)": "26369.99",
-      "OI Contracts": "6544801",
-      "OI Amount (Cr)": "440700.98"
+      "Buy Contracts": "2246403",
+      "Buy Amount (Cr)": "151520.29",
+      "Sell Contracts": "2197242",
+      "Sell Amount (Cr)": "148276.83",
+      "OI Contracts": "6595118",
+      "OI Amount (Cr)": "448372.02"
     },
     {
       "Category": "Stock Options",
-      "Buy Contracts": "412456",
-      "Buy Amount (Cr)": "29191.17",
-      "Sell Contracts": "427473",
-      "Sell Amount (Cr)": "30288.49",
-      "OI Contracts": "1232740",
-      "OI Amount (Cr)": "82956.89"
+      "Buy Contracts": "415312",
+      "Buy Amount (Cr)": "29655.39",
+      "Sell Contracts": "416025",
+      "Sell Amount (Cr)": "29469.94",
+      "OI Contracts": "1162789",
+      "OI Amount (Cr)": "78293.10"
     },
     {
       "Category": "Total",
-      "Buy Contracts": "4083458",
-      "Buy Amount (Cr)": "578076.38",
-      "Sell Contracts": "4223730",
-      "Sell Amount (Cr)": "600345.18",
-      "OI Contracts": "10934686",
-      "OI Amount (Cr)": "1028871.14"
+      "Buy Contracts": "6470072",
+      "Buy Amount (Cr)": "789693.12",
+      "Sell Contracts": "6436845",
+      "Sell Amount (Cr)": "789087.10",
+      "OI Contracts": "11022481",
+      "OI Amount (Cr)": "1051738.42"
     }
   ]
 }
